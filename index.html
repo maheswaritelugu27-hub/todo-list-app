@@ -3,51 +3,52 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>To-Do List App — Date & Time</title>
+  <title>To-Do List App — Yellow Theme</title>
   <style>
     * { box-sizing: border-box; }
     body {
       margin: 0; min-height: 100vh; padding: 28px 14px;
       font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #667eea, #764ba2);
-      color: #222;
+      background: linear-gradient(135deg, #fff176, #ffca28);
+      color: #29230b;
     }
     .container {
       max-width: 680px; margin: 0 auto; padding: 26px;
-      background: #fff; border-radius: 16px;
-      box-shadow: 0 10px 30px rgba(0,0,0,.18);
+      background: #fffdf4; border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(90, 65, 0, .18);
     }
-    h1 { text-align: center; color: #5544cc; margin: 0 0 8px; }
-    .subtitle { text-align: center; color: #666; margin: 0 0 24px; }
+    h1 { text-align: center; color: #8a5a00; margin: 0 0 8px; }
+    .subtitle { text-align: center; color: #6d5b2a; margin: 0 0 24px; }
     .form { display: grid; gap: 12px; }
     label { font-weight: 700; font-size: 14px; }
     input {
-      width: 100%; padding: 12px; border: 1px solid #ccc;
-      border-radius: 8px; font-size: 15px;
+      width: 100%; padding: 12px; border: 1px solid #d7b84c;
+      border-radius: 8px; font-size: 15px; background: #fff;
     }
+    input:focus { outline: 2px solid #e5a900; border-color: #e5a900; }
     .datetime-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
     .field { display: grid; gap: 7px; min-width: 0; }
     button {
       border: 0; border-radius: 8px; padding: 11px 13px;
       font-size: 14px; cursor: pointer;
     }
-    .primary { background: #5544cc; color: white; font-weight: 700; }
-    .primary:hover { background: #4232ad; }
-    .summary { text-align: center; color: #555; margin: 20px 0 12px; }
+    .primary { background: #e0a400; color: #211800; font-weight: 700; }
+    .primary:hover { background: #c68f00; color: white; }
+    .summary { text-align: center; color: #6d5b2a; margin: 20px 0 12px; }
     ul { list-style: none; padding: 0; margin: 0; }
     .task {
       padding: 15px; margin: 12px 0; border-radius: 10px;
-      background: #f5f4ff; border-left: 5px solid #5544cc;
+      background: #fff4bf; border-left: 5px solid #e0a400;
     }
-    .task.completed { border-left-color: #229765; opacity: .75; }
+    .task.completed { border-left-color: #27864a; opacity: .78; }
     .task.completed .task-name { text-decoration: line-through; }
     .task-name { font-size: 17px; font-weight: 700; overflow-wrap: anywhere; }
-    .task-datetime { margin-top: 8px; color: #555; font-size: 14px; }
+    .task-datetime { margin-top: 8px; color: #5c4b1d; font-size: 14px; }
     .actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
-    .complete { background: #229765; color: #fff; }
-    .edit { background: #e6a12a; color: #fff; }
-    .delete { background: #df454b; color: #fff; }
-    .empty { text-align: center; color: #777; padding: 22px 0; }
+    .complete { background: #27864a; color: #fff; }
+    .edit { background: #d58b00; color: #fff; }
+    .delete { background: #d94141; color: #fff; }
+    .empty { text-align: center; color: #81713e; padding: 22px 0; }
     @media (max-width: 480px) {
       .container { padding: 18px; }
       .datetime-row { grid-template-columns: 1fr; }
@@ -58,12 +59,10 @@
   <main class="container">
     <h1>📝 My To-Do List</h1>
     <p class="subtitle">Add a task with its date and time together.</p>
-
     <form class="form" id="taskForm">
       <div class="field">
         <label for="taskInput">Task</label>
-        <input id="taskInput" type="text" maxlength="200"
-               placeholder="What do you need to do?" required>
+        <input id="taskInput" type="text" maxlength="200" placeholder="What do you need to do?" required>
       </div>
       <div class="datetime-row">
         <div class="field">
@@ -77,11 +76,9 @@
       </div>
       <button class="primary" id="submitButton" type="submit">➕ Add Task</button>
     </form>
-
     <div class="summary" id="summary" aria-live="polite"></div>
     <ul id="taskList"></ul>
   </main>
-
   <script>
     const form = document.getElementById('taskForm');
     const taskInput = document.getElementById('taskInput');
@@ -90,48 +87,36 @@
     const submitButton = document.getElementById('submitButton');
     const taskList = document.getElementById('taskList');
     const summary = document.getElementById('summary');
-
     let tasks = [];
     let editingId = null;
-
     try {
       const saved = JSON.parse(localStorage.getItem('todo-list-app-tasks') || '[]');
       if (Array.isArray(saved)) tasks = saved;
     } catch (_) { tasks = []; }
 
     function saveTasks() {
-      try {
-        localStorage.setItem('todo-list-app-tasks', JSON.stringify(tasks));
-      } catch (_) {
-        alert('Could not save tasks in this browser.');
-      }
+      try { localStorage.setItem('todo-list-app-tasks', JSON.stringify(tasks)); }
+      catch (_) { alert('Could not save tasks in this browser.'); }
     }
-
-    function displayDate(dateValue) {
-      const [year, month, day] = dateValue.split('-').map(Number);
+    function displayDate(value) {
+      const [year, month, day] = value.split('-').map(Number);
       return new Date(year, month - 1, day).toLocaleDateString(undefined, {
         weekday: 'short', day: 'numeric', month: 'short', year: 'numeric'
       });
     }
-
-    function displayTime(timeValue) {
-      const [hour, minute] = timeValue.split(':').map(Number);
+    function displayTime(value) {
+      const [hour, minute] = value.split(':').map(Number);
       const date = new Date();
       date.setHours(hour, minute, 0, 0);
       return date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
     }
-
     form.addEventListener('submit', event => {
       event.preventDefault();
-      const name = taskInput.value.trim();
-      const date = taskDate.value;
-      const time = taskTime.value;
-
+      const name = taskInput.value.trim(), date = taskDate.value, time = taskTime.value;
       if (!name || !date || !time) {
         alert('Please enter the task, date, and time.');
         return;
       }
-
       if (editingId) {
         const task = tasks.find(item => item.id === editingId);
         if (task) Object.assign(task, { name, date, time });
@@ -140,22 +125,19 @@
       } else {
         tasks.push({
           id: (window.crypto && crypto.randomUUID) ? crypto.randomUUID() :
-              String(Date.now()) + Math.random().toString(16).slice(2),
+            String(Date.now()) + Math.random().toString(16).slice(2),
           name, date, time, completed: false
         });
       }
-
       saveTasks();
       form.reset();
       renderTasks();
       taskInput.focus();
     });
-
     function renderTasks() {
       tasks.sort((a, b) => `${a.date}T${a.time}`.localeCompare(`${b.date}T${b.time}`));
       summary.textContent = `${tasks.length} task(s) • ${tasks.filter(t => t.completed).length} completed`;
       taskList.replaceChildren();
-
       if (!tasks.length) {
         const empty = document.createElement('li');
         empty.className = 'empty';
@@ -163,64 +145,44 @@
         taskList.appendChild(empty);
         return;
       }
-
       tasks.forEach(task => {
         const li = document.createElement('li');
         li.className = 'task' + (task.completed ? ' completed' : '');
-
         const name = document.createElement('div');
         name.className = 'task-name';
         name.textContent = task.name;
-
         const when = document.createElement('div');
         when.className = 'task-datetime';
         when.textContent = `📅 ${displayDate(task.date)}  ·  🕒 ${displayTime(task.time)}`;
-
         const actions = document.createElement('div');
         actions.className = 'actions';
-
         const complete = document.createElement('button');
         complete.className = 'complete';
         complete.textContent = task.completed ? '↩ Undo' : '✓ Complete';
         complete.addEventListener('click', () => {
-          task.completed = !task.completed;
-          saveTasks();
-          renderTasks();
+          task.completed = !task.completed; saveTasks(); renderTasks();
         });
-
         const edit = document.createElement('button');
-        edit.className = 'edit';
-        edit.textContent = '✏️ Edit';
+        edit.className = 'edit'; edit.textContent = '✏️ Edit';
         edit.addEventListener('click', () => {
-          taskInput.value = task.name;
-          taskDate.value = task.date;
-          taskTime.value = task.time;
-          editingId = task.id;
-          submitButton.textContent = '💾 Update Task';
-          taskInput.focus();
+          taskInput.value = task.name; taskDate.value = task.date; taskTime.value = task.time;
+          editingId = task.id; submitButton.textContent = '💾 Update Task'; taskInput.focus();
         });
-
         const remove = document.createElement('button');
-        remove.className = 'delete';
-        remove.textContent = '🗑️ Delete';
+        remove.className = 'delete'; remove.textContent = '🗑️ Delete';
         remove.addEventListener('click', () => {
           if (!confirm('Delete this task?')) return;
           tasks = tasks.filter(item => item.id !== task.id);
           if (editingId === task.id) {
-            editingId = null;
-            form.reset();
-            submitButton.textContent = '➕ Add Task';
+            editingId = null; form.reset(); submitButton.textContent = '➕ Add Task';
           }
-          saveTasks();
-          renderTasks();
+          saveTasks(); renderTasks();
         });
-
         actions.append(complete, edit, remove);
         li.append(name, when, actions);
         taskList.appendChild(li);
       });
     }
-
     renderTasks();
   </script>
 </body>
