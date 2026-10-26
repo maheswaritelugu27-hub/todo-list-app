@@ -1,37 +1,21 @@
-# To-Do List Student Project
+# To-Do List App — Date & Time
 
-A responsive To-Do List web application built with HTML, CSS, and vanilla JavaScript.
+A beginner-friendly student project built with HTML, CSS, and JavaScript.
 
 ## Features
+- Add a task with both a date and a time.
+- View the date and time together for every task.
+- Edit, complete, undo, and delete tasks.
+- Tasks are saved in the browser using localStorage.
+- Responsive layout for desktop and mobile.
 
-- Add tasks
-- Edit/update task names
-- Delete tasks
-- Mark tasks as completed
-- Filter all, active, and completed tasks
-- Clear completed tasks
-- Save tasks in browser Local Storage
-- Responsive layout for desktop and mobile
+## Run locally
+Open `index.html` in a web browser.
 
-## How to run
+## Publish on GitHub Pages
+1. Upload `index.html` (and optionally this README) to your GitHub repository.
+2. In the repository, open **Settings → Pages**.
+3. Select **Deploy from a branch**, choose `main` and `/(root)`, then save.
+4. After deployment, open your GitHub Pages URL.
 
-1. Download or clone this repository.
-2. Open `index.html` in a modern web browser.
-3. Add and manage your tasks.
-
-No installation or build tools are required.
-
-## Project structure
-
-- `index.html` — page structure
-- `style.css` — layout and responsive styling
-- `script.js` — task operations and Local Storage
-- `README.md` — project documentation
-
-## Technologies
-
-HTML5, CSS3, JavaScript, Local Storage
-
-## Student project note
-
-This is a front-end demonstration project. Tasks are saved in the current browser only; they are not synchronized between devices or users.
+Note: localStorage data is stored in the current browser and does not automatically sync between devices.
